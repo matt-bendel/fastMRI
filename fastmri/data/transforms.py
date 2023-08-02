@@ -110,6 +110,9 @@ def apply_mask(
     mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
     num_low_frequencies = 16
 
+    print(mask.shape)
+    print(data.shape)
+
     masked_data = data * mask + 0.0  # the + 0.0 removes the sign of the zeros
 
     return masked_data, mask, num_low_frequencies
