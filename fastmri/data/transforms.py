@@ -79,7 +79,7 @@ def apply_mask(
          191, 192, 193, 194, 195,
          196, 197, 198, 199, 200, 204, 210, 217, 224, 231, 239, 248, 258, 269, 281, 294, 309, 326, 344, 363])
 
-    m = np.zeros((resolution, resolution))
+    m = np.zeros((384, 384))
     m[:, a] = True
     samp = m
     mask = transforms.to_tensor(np.tile(samp, (data.shape[0], 1, 1)).astype(np.float32))
@@ -472,11 +472,12 @@ class VarNetDataTransform:
             max_value = 0.0
 
         kspace_torch = to_tensor(kspace)
+        kspace_torch = complex_center_crop(kspace_torch, (384, 384))
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
         acq_end = attrs["padding_right"]
 
-        crop_size = (attrs["recon_size"][0], attrs["recon_size"][1])
+        crop_size = (384, 384)
 
         if self.mask_func is not None:
             masked_kspace, mask_torch, num_low_frequencies = apply_mask(

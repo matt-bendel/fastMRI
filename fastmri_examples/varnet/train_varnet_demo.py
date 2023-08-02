@@ -83,7 +83,7 @@ def build_args():
     # basic args
     path_config = pathlib.Path("../../fastmri_dirs.yaml")
     backend = "ddp"
-    num_gpus = 2 if backend == "ddp" else 1
+    num_gpus = 4 if backend == "ddp" else 1
     batch_size = 1
 
     # set defaults based on optional directory config
@@ -117,7 +117,7 @@ def build_args():
     parser.add_argument(
         "--accelerations",
         nargs="+",
-        default=[4],
+        default=[8],
         type=int,
         help="Acceleration rates to use for masks",
     )
