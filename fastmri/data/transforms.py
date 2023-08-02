@@ -501,7 +501,7 @@ class VarNetDataTransform:
         # TODO: Save SVD matrix offline
         coil_compressed_x = ImageCropandKspaceCompression(x, None)  # (384, 384, 8)
 
-        kspace = fft(x, (0, 1))
+        kspace = fft(coil_compressed_x, (0, 1))
 
         kspace_torch = to_tensor(kspace)
         seed = None if not self.use_seed else tuple(map(ord, fname))
