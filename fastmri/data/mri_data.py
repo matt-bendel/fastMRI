@@ -275,6 +275,8 @@ class SliceDataset(torch.utils.data.Dataset):
         self.dataset_cache_file = Path(dataset_cache_file)
 
         raw_sample_filter = filter_samps
+        print(raw_sample_filter)
+        exit()
         self.transform = transform
         self.recons_key = (
             "reconstruction_esc" if challenge == "singlecoil" else "reconstruction_rss"
