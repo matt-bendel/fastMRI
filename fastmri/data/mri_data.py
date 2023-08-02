@@ -379,7 +379,7 @@ class SliceDataset(torch.utils.data.Dataset):
             padding_right = padding_left + enc_limits_max
 
             num_slices = hf["kspace"].shape[0]
-            num_coils = hf["kspace"].shape[-1]
+            num_coils = hf["kspace"].shape[1]
 
             metadata = {
                 "padding_left": padding_left,
