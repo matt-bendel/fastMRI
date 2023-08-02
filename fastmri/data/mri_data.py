@@ -221,10 +221,9 @@ def filter_samps(metadata, nc):
         return False
 
     volume_size = metadata[2]['encoding_size']
-    if volume_size[0] < 384 or volume_size[1] < 384:
+    if volume_size[0] < 384 or volume_size[1] < 384 or nc < 8:
         return False
 
-    print(nc)
     return True
 
 class SliceDataset(torch.utils.data.Dataset):
