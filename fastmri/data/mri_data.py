@@ -217,8 +217,14 @@ class CombinedSliceDataset(torch.utils.data.Dataset):
 
 
 def filter_samps(metadata):
-    print(metadata)
-    exit()
+    if metadata['acquisition'] != "AXT2":
+        return False
+
+    volume_size = metadata['encoding_size']
+    if volume_size[0] < 384 or volume_size[1] < 384 or volume_size[2] < 8:
+        return False
+
+    return True
 
 class SliceDataset(torch.utils.data.Dataset):
     """
@@ -359,8 +365,8 @@ class SliceDataset(torch.utils.data.Dataset):
             )
             rec = ["encoding", "reconSpace", "matrixSize"]
             recon_size = (
-                int(et_query(et_root, rec + ["x"])),
-                int(et_query(et_root, rec + ["y"])),
+                384,
+                384,
                 int(et_query(et_root, rec + ["z"])),
             )
 
