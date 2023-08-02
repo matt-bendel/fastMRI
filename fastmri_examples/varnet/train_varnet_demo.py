@@ -17,10 +17,10 @@ from fastmri.data.transforms import VarNetDataTransform
 from fastmri.pl_modules import FastMriDataModule, VarNetModule
 
 def filter_samples(metadata):
-    if metadata['acquisition'] != "AXT2":
+    if metadata[2]['acquisition'] != "AXT2":
         return False
 
-    volume_size = metadata['encoding_size']
+    volume_size = metadata[2]['encoding_size']
     if volume_size[0] < 384 or volume_size[1] < 384 or volume_size[2] < 8:
         return False
 
