@@ -222,8 +222,6 @@ class FastMriDataModule(pl.LightningDataModule):
                 )
                 raw_sample_filter = self.test_filter
 
-        print(raw_sample_filter)
-        exit()
         # if desired, combine train and val together for the train split
         dataset: Union[SliceDataset, CombinedSliceDataset]
         if is_train and self.combine_train_val:

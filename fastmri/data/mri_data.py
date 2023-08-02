@@ -269,6 +269,8 @@ class SliceDataset(torch.utils.data.Dataset):
             )
 
         self.dataset_cache_file = Path(dataset_cache_file)
+        print("HERE")
+        print(raw_sample_filter)
 
         self.transform = transform
         self.recons_key = (
