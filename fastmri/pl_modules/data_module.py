@@ -150,8 +150,6 @@ class FastMriDataModule(pl.LightningDataModule):
                 should be set to True if training with ddp.
         """
         super().__init__()
-        print("POOP")
-        exit()
         if _check_both_not_none(sample_rate, volume_sample_rate):
             raise ValueError("Can set sample_rate or volume_sample_rate, but not both.")
         if _check_both_not_none(val_sample_rate, val_volume_sample_rate):
