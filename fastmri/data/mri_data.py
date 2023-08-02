@@ -281,7 +281,7 @@ class SliceDataset(torch.utils.data.Dataset):
         else:
             print("HERE 2")
             self.raw_sample_filter = raw_sample_filter
-
+        exit()
         # set default sampling mode if none given
         if sample_rate is None:
             sample_rate = 1.0
