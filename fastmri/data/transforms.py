@@ -110,9 +110,6 @@ def apply_mask(
     mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
     num_low_frequencies = 16
 
-    print(mask.shape)
-    print(data.shape)
-
     masked_data = data * mask + 0.0  # the + 0.0 removes the sign of the zeros
 
     return masked_data, mask, num_low_frequencies
@@ -506,7 +503,7 @@ class VarNetDataTransform:
 
         kspace = fft(coil_compressed_x, (0, 1))
 
-        kspace_torch = to_tensor(kspace)
+        kspace_torch = to_tensor(kspace).permute(2, 0, 1, 3)
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
         acq_end = attrs["padding_right"]
