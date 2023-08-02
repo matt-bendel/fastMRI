@@ -224,6 +224,7 @@ def filter_samps(metadata):
     if volume_size[0] < 384 or volume_size[1] < 384:
         return False
 
+    print(metadata)
     return True
 
 class SliceDataset(torch.utils.data.Dataset):
