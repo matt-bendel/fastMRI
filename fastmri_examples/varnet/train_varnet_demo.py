@@ -16,10 +16,6 @@ from fastmri.data.subsample import create_mask_for_mask_type
 from fastmri.data.transforms import VarNetDataTransform
 from fastmri.pl_modules import FastMriDataModule, VarNetModule
 
-def filter_samples(metadata):
-    print(metadata)
-    exit()
-
 def cli_main(args):
     pl.seed_everything(args.seed)
 
