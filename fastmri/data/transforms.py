@@ -11,9 +11,33 @@ import numpy as np
 import torch
 
 import fastmri
+import numpy as np
+
+fft = lambda x, ax: np.fft.fftshift(np.fft.fftn(np.fft.ifftshift(x, axes=ax), axes=ax, norm='ortho'), axes=ax)
+ifft = lambda X, ax: np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(X, axes=ax), axes=ax, norm='ortho'), axes=ax)
 
 from .subsample import MaskFunc
 
+def ImageCropandKspaceCompression(x, vh):
+    w_from = (x.shape[0] - 384) // 2  # crop images into 384x384
+    h_from = (x.shape[1] - 384) // 2
+    w_to = w_from + 384
+    h_to = h_from + 384
+    cropped_x = x[w_from:w_to, h_from:h_to, :]
+    if cropped_x.shape[-1] > 8:
+        x_tocompression = cropped_x.reshape(384 ** 2, cropped_x.shape[-1])
+
+        if vh is None:
+            U, S, Vh = np.linalg.svd(x_tocompression, full_matrices=False)
+            coil_compressed_x = np.matmul(x_tocompression, Vh.conj().T)
+            coil_compressed_x = coil_compressed_x[:, 0:8].reshape(384, 384, 8)
+        else:
+            coil_compressed_x = np.matmul(x_tocompression, vh.conj().T)
+            coil_compressed_x = coil_compressed_x[:, 0:8].reshape(384, 384, 8)
+    else:
+        coil_compressed_x = cropped_x
+
+    return coil_compressed_x
 
 def to_tensor(data: np.ndarray) -> torch.Tensor:
     """
@@ -471,8 +495,15 @@ class VarNetDataTransform:
             target_torch = torch.tensor(0)
             max_value = 0.0
 
+        kspace = kspace.transpose(1, 2, 0)
+        x = ifft(kspace, (0, 1))  # (768, 396, 16)
+
+        # TODO: Save SVD matrix offline
+        coil_compressed_x = ImageCropandKspaceCompression(x, None)  # (384, 384, 8)
+
+        kspace = fft(x, (0, 1))
+
         kspace_torch = to_tensor(kspace)
-        kspace_torch = complex_center_crop(kspace_torch, (384, 384))
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
         acq_end = attrs["padding_right"]
