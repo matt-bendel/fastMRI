@@ -168,6 +168,7 @@ def build_args():
         deterministic=True,  # makes things slower, but deterministic
         default_root_dir=default_root_dir,  # directory for logs and checkpoints
         max_epochs=50,  # max number of epochs
+        num_sanity_val=0
     )
 
     args = parser.parse_args()
