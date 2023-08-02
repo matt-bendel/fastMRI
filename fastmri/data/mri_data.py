@@ -216,6 +216,10 @@ class CombinedSliceDataset(torch.utils.data.Dataset):
                 i = i - len(dataset)
 
 
+def filter_samps(metadata):
+    print(metadata)
+    exit()
+
 class SliceDataset(torch.utils.data.Dataset):
     """
     A PyTorch Dataset that provides access to MR image slices.
@@ -269,9 +273,8 @@ class SliceDataset(torch.utils.data.Dataset):
             )
 
         self.dataset_cache_file = Path(dataset_cache_file)
-        print("HERE")
-        print(raw_sample_filter)
 
+        raw_sample_filter = filter_samps
         self.transform = transform
         self.recons_key = (
             "reconstruction_esc" if challenge == "singlecoil" else "reconstruction_rss"
