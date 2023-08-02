@@ -275,11 +275,9 @@ class SliceDataset(torch.utils.data.Dataset):
             "reconstruction_esc" if challenge == "singlecoil" else "reconstruction_rss"
         )
         self.raw_samples = []
-        print("HERE")
         if raw_sample_filter is None:
             self.raw_sample_filter = lambda raw_sample: True
         else:
-            print("HERE 2")
             self.raw_sample_filter = raw_sample_filter
 
         # set default sampling mode if none given

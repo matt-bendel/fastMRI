@@ -183,6 +183,10 @@ class FastMriDataModule(pl.LightningDataModule):
         self.num_workers = num_workers
         self.distributed_sampler = distributed_sampler
 
+        print(self.train_filter)
+        print(self.val_filter)
+        exit()
+
     def _create_data_loader(
         self,
         data_transform: Callable,
