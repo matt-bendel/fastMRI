@@ -198,6 +198,7 @@ def build_args():
 
 
 def run_cli():
+    torch.set_float32_matmul_precision('medium')
     args = build_args()
 
     # ---------------------

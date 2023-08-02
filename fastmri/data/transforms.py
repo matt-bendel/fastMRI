@@ -516,10 +516,10 @@ class VarNetDataTransform:
             )
 
             sample = VarNetSample(
-                masked_kspace=masked_kspace,
+                masked_kspace=masked_kspace.float(),
                 mask=mask_torch.to(torch.bool),
                 num_low_frequencies=num_low_frequencies,
-                target=target_torch,
+                target=target_torch.float(),
                 fname=fname,
                 slice_num=slice_num,
                 max_value=max_value,
@@ -538,10 +538,10 @@ class VarNetDataTransform:
             mask_torch[:, :, acq_end:] = 0
 
             sample = VarNetSample(
-                masked_kspace=masked_kspace,
+                masked_kspace=masked_kspace.float(),
                 mask=mask_torch.to(torch.bool),
                 num_low_frequencies=0,
-                target=target_torch,
+                target=target_torch.float(),
                 fname=fname,
                 slice_num=slice_num,
                 max_value=max_value,
