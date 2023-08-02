@@ -106,7 +106,7 @@ def apply_mask(
     m = np.zeros((384, 384))
     m[:, a] = True
     samp = m
-    mask = to_tensor(np.tile(samp, (data.shape[0], 1, 1)).astype(np.float32))
+    mask = to_tensor(np.tile(samp, (8, 1, 1)).astype(np.float32))
     mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
     num_low_frequencies = 16
 
