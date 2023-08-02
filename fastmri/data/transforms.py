@@ -472,8 +472,6 @@ class VarNetDataTransform:
             max_value = 0.0
 
         kspace_torch = to_tensor(kspace)
-        print(kspace_torch.shape)
-        exit()
         kspace_torch = complex_center_crop(kspace_torch, (384, 384))
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
