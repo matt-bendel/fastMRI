@@ -303,7 +303,9 @@ class SliceDataset(torch.utils.data.Dataset):
                 new_raw_samples = []
                 for slice_ind in range(num_slices):
                     raw_sample = FastMRIRawDataSample(fname, slice_ind, metadata)
-                    if self.raw_sample_filter(raw_sample):
+                    print(metadata["recon_size"])
+                    exit()
+                    if self.raw_sample_filter(raw_sample) or metadata:
                         new_raw_samples.append(raw_sample)
 
                 self.raw_samples += new_raw_samples
