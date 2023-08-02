@@ -216,7 +216,7 @@ class CombinedSliceDataset(torch.utils.data.Dataset):
                 i = i - len(dataset)
 
 
-def filter_samps(metadata):
+def filter_samps(metadata, nc):
     if metadata[2]['acquisition'] != "AXT2":
         return False
 
@@ -224,7 +224,7 @@ def filter_samps(metadata):
     if volume_size[0] < 384 or volume_size[1] < 384:
         return False
 
-    print(metadata)
+    print(nc)
     return True
 
 class SliceDataset(torch.utils.data.Dataset):
@@ -312,12 +312,12 @@ class SliceDataset(torch.utils.data.Dataset):
         if dataset_cache.get(root) is None or not use_dataset_cache:
             files = list(Path(root).iterdir())
             for fname in sorted(files):
-                metadata, num_slices = self._retrieve_metadata(fname)
+                metadata, num_slices, num_coils = self._retrieve_metadata(fname)
 
                 new_raw_samples = []
                 for slice_ind in range(num_slices):
                     raw_sample = FastMRIRawDataSample(fname, slice_ind, metadata)
-                    if self.raw_sample_filter(raw_sample):
+                    if self.raw_sample_filter(raw_sample, num_coils):
                         new_raw_samples.append(raw_sample)
 
                 self.raw_samples += new_raw_samples
@@ -379,6 +379,7 @@ class SliceDataset(torch.utils.data.Dataset):
             padding_right = padding_left + enc_limits_max
 
             num_slices = hf["kspace"].shape[0]
+            num_coils = hf["kspace"].shape[-1]
 
             metadata = {
                 "padding_left": padding_left,
@@ -388,7 +389,7 @@ class SliceDataset(torch.utils.data.Dataset):
                 **hf.attrs,
             }
 
-        return metadata, num_slices
+        return metadata, num_slices, num_coils
 
     def __len__(self):
         return len(self.raw_samples)
