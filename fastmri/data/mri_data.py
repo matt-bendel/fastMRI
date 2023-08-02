@@ -217,12 +217,11 @@ class CombinedSliceDataset(torch.utils.data.Dataset):
 
 
 def filter_samps(metadata):
-    print(metadata[2])
     if metadata[2]['acquisition'] != "AXT2":
         return False
 
     volume_size = metadata[2]['encoding_size']
-    if volume_size[0] < 384 or volume_size[1] < 384 or volume_size[2] < 8:
+    if volume_size[0] < 384 or volume_size[1] < 384:
         return False
 
     return True
