@@ -16,6 +16,16 @@ from fastmri.data.subsample import create_mask_for_mask_type
 from fastmri.data.transforms import VarNetDataTransform
 from fastmri.pl_modules import FastMriDataModule, VarNetModule
 
+def filter_samples(metadata):
+    if metadata['acquisition'] != "AXT2":
+        return False
+
+    volume_size = metadata['encoding_size']
+    if volume_size[0] < 384 or volume_size[1] < 384 or volume_size[2] < 8:
+        return False
+
+    return True
+
 def cli_main(args):
     pl.seed_everything(args.seed)
 
