@@ -181,10 +181,10 @@ def build_args():
     args.callbacks = [
         pl.callbacks.ModelCheckpoint(
             dirpath=args.default_root_dir / "checkpoints",
-            save_top_k=True,
+            save_top_k=1,
             verbose=True,
-            monitor="validation_loss",
-            mode="min",
+            monitor="epoch",
+            mode="max",
         )
     ]
 
