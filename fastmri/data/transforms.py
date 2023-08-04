@@ -495,6 +495,7 @@ class VarNetDataTransform:
             target_torch = torch.tensor(0)
             max_value = 0.0
 
+        kspace = kspace.astype('complex64')
         kspace = kspace.transpose(1, 2, 0)
         x = ifft(kspace, (0, 1))  # (768, 396, 16)
 
