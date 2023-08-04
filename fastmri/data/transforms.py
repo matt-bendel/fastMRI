@@ -504,6 +504,8 @@ class VarNetDataTransform:
         kspace = fft(coil_compressed_x, (0, 1))
 
         kspace_torch = to_tensor(kspace).permute(2, 0, 1, 3)
+        gt_torch = fastmri.fft2c(kspace_torch)
+
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
         acq_end = attrs["padding_right"]
@@ -519,7 +521,7 @@ class VarNetDataTransform:
                 masked_kspace=masked_kspace.float(),
                 mask=mask_torch.to(torch.bool),
                 num_low_frequencies=num_low_frequencies,
-                target=target_torch.float(),
+                target=gt_torch.float(),
                 fname=fname,
                 slice_num=slice_num,
                 max_value=max_value,

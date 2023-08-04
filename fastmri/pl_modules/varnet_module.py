@@ -98,9 +98,10 @@ class VarNetModule(MriModule):
     def training_step(self, batch, batch_idx):
         output = self(batch.masked_kspace, batch.mask, batch.num_low_frequencies)
 
-        target, output = transforms.center_crop_to_smallest(batch.target, output)
+        target = batch.target
+
         loss = self.loss(
-            output.unsqueeze(1), target.unsqueeze(1), data_range=batch.max_value
+            output.view(output.shape[0], -1, output.shape[2], output.shape[3]), output.view(target.shape[0], -1, target.shape[2], target.shape[3]), data_range=target.max()
         )
 
         self.log("train_loss", loss)
@@ -111,7 +112,7 @@ class VarNetModule(MriModule):
         output = self.forward(
             batch.masked_kspace, batch.mask, batch.num_low_frequencies
         )
-        target, output = transforms.center_crop_to_smallest(batch.target, output)
+        target = batch.target
 
         return {
             "batch_idx": batch_idx,
@@ -121,7 +122,7 @@ class VarNetModule(MriModule):
             "output": output,
             "target": target,
             "val_loss": self.loss(
-                output.unsqueeze(1), target.unsqueeze(1), data_range=batch.max_value
+                output.view(output.shape[0], -1, output.shape[2], output.shape[3]), output.view(target.shape[0], -1, target.shape[2], target.shape[3]), data_range=target.max()
             ),
         }
 
