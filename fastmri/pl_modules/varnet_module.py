@@ -101,7 +101,7 @@ class VarNetModule(MriModule):
         target = batch.target
 
         loss = self.loss(
-            output.view(output.shape[0], -1, output.shape[2], output.shape[3]), output.view(target.shape[0], -1, target.shape[2], target.shape[3]), data_range=torch.max(target.view(target.shape[0], -1), dim=-1)
+            output.view(output.shape[0], -1, output.shape[2], output.shape[3]), output.view(target.shape[0], -1, target.shape[2], target.shape[3]), data_range=torch.max(target.view(target.shape[0], -1), dim=-1)[0]
         )
 
         self.log("train_loss", loss)
@@ -122,7 +122,7 @@ class VarNetModule(MriModule):
             "output": output,
             "target": target,
             "val_loss": self.loss(
-                output.view(output.shape[0], -1, output.shape[2], output.shape[3]), output.view(target.shape[0], -1, target.shape[2], target.shape[3]), data_range=torch.max(target.view(target.shape[0], -1), dim=-1)
+                output.view(output.shape[0], -1, output.shape[2], output.shape[3]), output.view(target.shape[0], -1, target.shape[2], target.shape[3]), data_range=torch.max(target.view(target.shape[0], -1), dim=-1)[0]
             ),
         }
 
