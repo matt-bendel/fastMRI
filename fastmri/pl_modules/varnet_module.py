@@ -98,7 +98,7 @@ class VarNetModule(MriModule):
     def training_step(self, batch, batch_idx):
         output = self(batch.masked_kspace, batch.mask, batch.num_low_frequencies)
 
-        target = batch.target
+        target = fastmri.rss(fastmri.complex_abs(batch.target), dim=1)
 
 
         loss = self.loss(
