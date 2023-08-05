@@ -120,8 +120,8 @@ class VarNetModule(MriModule):
         target = batch.target
 
         if self.global_rank == 0:
-            np_gt = fastmri.rss(fastmri.complex_abs(target), 1).cpu().numpy()
-            np_recon = fastmri.rss(fastmri.complex_abs(output), 1).cpu().numpy()
+            np_gt = fastmri.rss(fastmri.complex_abs(target), 1)[0].cpu().numpy()
+            np_recon = fastmri.rss(fastmri.complex_abs(output), 1)[0].cpu().numpy()
 
             plt.figure()
             plt.imshow(np_recon, cmap='gray')
