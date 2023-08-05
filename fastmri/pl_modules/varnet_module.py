@@ -101,16 +101,13 @@ class VarNetModule(MriModule):
         target = batch.target
 
 
-        ssim_val = self.loss(
+        loss = self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
             data_range=torch.max(target.view(target.shape[0], -1), axis=-1)[0]
         )
 
-        if self.global_rank == 0:
-            print(ssim_val)
+        print(loss)
         exit()
-
-        loss = (1-alpha) * F.l1_loss(target, output) - alpha * ssim_val
 
         self.log("train_loss", loss)
 
