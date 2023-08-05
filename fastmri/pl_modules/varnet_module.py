@@ -15,6 +15,8 @@ from fastmri.models import VarNet
 from torch.nn import functional as F
 from .mri_module import MriModule
 import pytorch_ssim
+import pytorch_lightning as pl
+import numpy as np
 
 class VarNetModule(MriModule):
     """
@@ -106,9 +108,6 @@ class VarNetModule(MriModule):
             data_range=batch.max_value
         )
 
-        print(loss)
-        exit()
-
         self.log("train_loss", loss)
 
         return loss
@@ -118,6 +117,20 @@ class VarNetModule(MriModule):
             batch.masked_kspace, batch.mask, batch.num_low_frequencies
         )
         target = batch.target
+
+        if self.global_rank == 0:
+            np_gt = fastmri.rss(fastmri.complex_abs(target), 1).cpu().numpy()
+            np_recon = fastmri.rss(fastmri.complex_abs(output), 1).cpu().numpy()
+
+            plt.figure()
+            plt.imshow(np_recon, cmap='gray')
+            plt.savefig('recon_rss.png')
+            plt.close()
+
+            plt.figure()
+            plt.imshow(np_gt, cmap='gray')
+            plt.savefig('gt_rss.png')
+            plt.close()
 
         return {
             "batch_idx": batch_idx,
