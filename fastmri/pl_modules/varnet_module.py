@@ -12,7 +12,7 @@ import torch
 import fastmri
 from fastmri.data import transforms
 from fastmri.models import VarNet
-
+from torch.nn import functional as F
 from .mri_module import MriModule
 import pytorch_ssim
 
@@ -102,7 +102,7 @@ class VarNetModule(MriModule):
 
         alpha = 0.84
 
-        loss = 1 - self.loss(
+        loss = (1-alpha) * F.l1_loss(target, output) - alpha * self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3])
         )
 
