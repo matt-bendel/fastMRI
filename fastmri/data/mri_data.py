@@ -319,8 +319,8 @@ class SliceDataset(torch.utils.data.Dataset):
                     if self.raw_sample_filter(raw_sample, num_coils) and slice_ind <= 5:
                         new_raw_samples.append(raw_sample)
 
-                if len(self.raw_samples) < 100:
-                    self.raw_samples += new_raw_samples
+                # if len(self.raw_samples) < 100:
+                self.raw_samples += new_raw_samples
 
             if dataset_cache.get(root) is None and use_dataset_cache:
                 dataset_cache[root] = self.raw_samples
