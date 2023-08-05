@@ -105,6 +105,7 @@ class VarNetModule(MriModule):
         if self.global_rank == 0:
             print(target.max())
             print(output.max())
+            print(torch.abs(target - output).sum())
             print(F.l1_loss(target, output))
         exit()
 
