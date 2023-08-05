@@ -316,10 +316,11 @@ class SliceDataset(torch.utils.data.Dataset):
                 new_raw_samples = []
                 for slice_ind in range(num_slices):
                     raw_sample = FastMRIRawDataSample(fname, slice_ind, metadata)
-                    if self.raw_sample_filter(raw_sample, num_coils) and slice_ind <= 5 and len(new_raw_samples) < 30:
+                    if self.raw_sample_filter(raw_sample, num_coils) and slice_ind <= 5:
                         new_raw_samples.append(raw_sample)
 
-                self.raw_samples += new_raw_samples
+                if len(self.raw_samples) < 100:
+                    self.raw_samples += new_raw_samples
 
             if dataset_cache.get(root) is None and use_dataset_cache:
                 dataset_cache[root] = self.raw_samples
