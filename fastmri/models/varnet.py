@@ -273,14 +273,10 @@ class VarNet(nn.Module):
         sens_maps = self.sens_net(masked_kspace, mask, num_low_frequencies)
         kspace_pred = masked_kspace.clone()
 
-        print(sens_maps.shape)
-        print(kspace_pred.shape)
-        exit()
-
         for cascade in self.cascades:
             kspace_pred = cascade(kspace_pred, masked_kspace, mask, sens_maps)
 
-        return fastmri.ifft2c(kspace_pred)
+        return fastmri.ifft2c(masked_kspace)
 
 
 class VarNetBlock(nn.Module):
