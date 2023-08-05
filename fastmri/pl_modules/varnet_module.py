@@ -90,7 +90,7 @@ class VarNetModule(MriModule):
             pools=self.pools,
         )
 
-        self.loss = pytorch_ssim.SSIM()
+        self.loss = fastmri.SSIMLoss()
 
     def forward(self, masked_kspace, mask, num_low_frequencies):
         return self.varnet(masked_kspace, mask, num_low_frequencies)
@@ -102,16 +102,16 @@ class VarNetModule(MriModule):
 
         alpha = 0.84
 
+        ssim_val = self.loss(
+            target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
+            data_range=torch.max(target.view(target.shape[0], -1), axis=-1)[0]
+        )
+
         if self.global_rank == 0:
-            print(target.max())
-            print(output.max())
-            print(torch.abs(target - output).mean())
-            print(F.l1_loss(target, output))
+            print(ssim_val)
         exit()
 
-        loss = (1-alpha) * F.l1_loss(target, output) - alpha * self.loss(
-            target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3])
-        )
+        loss = (1-alpha) * F.l1_loss(target, output) - alpha * ssim_val
 
         self.log("train_loss", loss)
 
@@ -131,7 +131,8 @@ class VarNetModule(MriModule):
             "output": output,
             "target": target,
             "val_loss": self.loss(
-                target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3])
+                target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
+                data_range=torch.max(target.view(target.shape[0], -1), axis=-1)[0]
             ),
         }
 
