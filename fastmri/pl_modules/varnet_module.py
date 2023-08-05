@@ -101,7 +101,11 @@ class VarNetModule(MriModule):
         target = batch.target
 
         alpha = 0.84
-        print(F.l1_loss(target, output))
+
+        if self.global_rank == 0:
+            print(target.max())
+            print(output.max())
+            print(F.l1_loss(target, output))
         exit()
 
         loss = (1-alpha) * F.l1_loss(target, output) - alpha * self.loss(
