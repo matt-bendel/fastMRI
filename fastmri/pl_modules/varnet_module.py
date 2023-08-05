@@ -100,7 +100,6 @@ class VarNetModule(MriModule):
 
         target = batch.target
 
-        alpha = 0.84
 
         ssim_val = self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
