@@ -131,17 +131,17 @@ class VarNetModule(MriModule):
             plt.savefig('gt_rss.png')
             plt.close()
 
-        return {
-            "batch_idx": batch_idx,
-            "fname": batch.fname,
-            "slice_num": batch.slice_num,
-            "max_value": batch.max_value,
-            "output": output,
-            "target": target,
-            "val_ssim": self.loss(
-                target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
-            ),
-        }
+        # return {
+        #     "batch_idx": batch_idx,
+        #     "fname": batch.fname,
+        #     "slice_num": batch.slice_num,
+        #     "max_value": batch.max_value,
+        #     "output": output,
+        #     "target": target,
+        #     "val_ssim": self.loss(
+        #         target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
+        #     ),
+        # }
 
     def test_step(self, batch, batch_idx):
         output = self(batch.masked_kspace, batch.mask, batch.num_low_frequencies)
