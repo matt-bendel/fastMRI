@@ -106,7 +106,7 @@ class VarNetModule(MriModule):
 
         loss = self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
-            data_range=batch.max_value
+            data_range=torch.max(target.view(target.shape[0], -1), -1)[0]
         )
 
         self.log("train_loss", loss)
