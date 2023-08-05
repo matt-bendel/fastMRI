@@ -505,7 +505,7 @@ class VarNetDataTransform:
         kspace = fft(coil_compressed_x, (0, 1))
 
         kspace_torch = to_tensor(kspace).permute(2, 0, 1, 3)
-        gt_torch = fastmri.fft2c(kspace_torch)
+        gt_torch = fastmri.ifft2c(kspace_torch)
 
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
