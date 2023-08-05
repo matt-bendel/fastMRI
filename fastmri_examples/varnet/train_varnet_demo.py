@@ -54,7 +54,7 @@ def cli_main(args):
         test_path=args.test_path,
         sample_rate=args.sample_rate,
         batch_size=args.batch_size,
-        num_workers=4,
+        num_workers=2,
         distributed_sampler=(args.accelerator in ("ddp", "ddp_cpu")),
     )
 
