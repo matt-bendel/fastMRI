@@ -513,43 +513,20 @@ class VarNetDataTransform:
 
         crop_size = (384, 384)
 
-        if self.mask_func is not None:
-            masked_kspace, mask_torch, num_low_frequencies = apply_mask(
-                kspace_torch, self.mask_func, seed=seed, padding=(acq_start, acq_end)
-            )
+        masked_kspace, mask_torch, num_low_frequencies = apply_mask(
+            kspace_torch, self.mask_func, seed=seed, padding=(acq_start, acq_end)
+        )
 
-            sample = VarNetSample(
-                masked_kspace=masked_kspace.float(),
-                mask=mask_torch.to(torch.bool),
-                num_low_frequencies=num_low_frequencies,
-                target=gt_torch.float(),
-                fname=fname,
-                slice_num=slice_num,
-                max_value=max_value,
-                crop_size=crop_size,
-            )
-        else:
-            masked_kspace = kspace_torch
-            shape = np.array(kspace_torch.shape)
-            num_cols = shape[-2]
-            shape[:-3] = 1
-            mask_shape = [1] * len(shape)
-            mask_shape[-2] = num_cols
-            mask_torch = torch.from_numpy(mask.reshape(*mask_shape).astype(np.float32))
-            mask_torch = mask_torch.reshape(*mask_shape)
-            mask_torch[:, :, :acq_start] = 0
-            mask_torch[:, :, acq_end:] = 0
-
-            sample = VarNetSample(
-                masked_kspace=masked_kspace.float(),
-                mask=mask_torch.to(torch.bool),
-                num_low_frequencies=0,
-                target=target_torch.float(),
-                fname=fname,
-                slice_num=slice_num,
-                max_value=max_value,
-                crop_size=crop_size,
-            )
+        sample = VarNetSample(
+            masked_kspace=masked_kspace.float(),
+            mask=mask_torch.to(torch.bool),
+            num_low_frequencies=num_low_frequencies,
+            target=gt_torch.float(),
+            fname=fname,
+            slice_num=slice_num,
+            max_value=max_value,
+            crop_size=crop_size,
+        )
 
         return sample
 
