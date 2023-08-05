@@ -99,6 +99,8 @@ class VarNetModule(MriModule):
         output = self(batch.masked_kspace, batch.mask, batch.num_low_frequencies)
 
         target = batch.target
+        print(batch.target.max())
+        print(batch.masked_kspace.max())
 
         alpha = 0.84
 
