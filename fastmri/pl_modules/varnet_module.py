@@ -97,7 +97,6 @@ class VarNetModule(MriModule):
 
     def training_step(self, batch, batch_idx):
         output = self(batch.masked_kspace, batch.mask, batch.num_low_frequencies)
-        print(output[0, 0, 0, :, 0])
 
         target = batch.target
 

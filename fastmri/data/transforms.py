@@ -502,10 +502,9 @@ class VarNetDataTransform:
         # TODO: Save SVD matrix offline
         coil_compressed_x = ImageCropandKspaceCompression(x, None)  # (384, 384, 8)
 
-        kspace = fft(coil_compressed_x, (0, 1))
+        gt_torch = fastmri.ifft2c(to_tensor(coil_compressed_x).permute(2, 0, 1, 3))
 
-        kspace_torch = to_tensor(kspace).permute(2, 0, 1, 3)
-        gt_torch = fastmri.ifft2c(kspace_torch)
+        kspace_torch = fastmri.fft2c(gt_torch)
 
         seed = None if not self.use_seed else tuple(map(ord, fname))
         acq_start = attrs["padding_left"]
