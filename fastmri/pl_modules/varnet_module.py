@@ -100,6 +100,9 @@ class VarNetModule(MriModule):
 
         target = fastmri.rss(fastmri.complex_abs(batch.target), dim=1)
 
+        target = target.unsqueeze(1)
+        output = output.unsqueeze(1)
+
 
         loss = self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3]),
