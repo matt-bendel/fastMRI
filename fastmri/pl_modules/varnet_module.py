@@ -102,6 +102,8 @@ class VarNetModule(MriModule):
 
         alpha = 0.84
 
+        print(F.l1_loss(target, output))
+
         loss = (1-alpha) * F.l1_loss(target, output) - alpha * self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3])
         )
