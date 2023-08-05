@@ -93,13 +93,14 @@ class VarNetModule(MriModule):
         self.loss = pytorch_ssim.SSIM()
 
     def forward(self, masked_kspace, mask, num_low_frequencies):
-        print(masked_kspace[0, 0, :, : 0])
         return self.varnet(masked_kspace, mask, num_low_frequencies)
 
     def training_step(self, batch, batch_idx):
         output = self(batch.masked_kspace, batch.mask, batch.num_low_frequencies)
+        print(batch.masked_kspace.shape)
 
         target = batch.target
+        print(target.shape)
 
         alpha = 0.84
 
