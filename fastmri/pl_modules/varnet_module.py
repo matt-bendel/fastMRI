@@ -100,9 +100,10 @@ class VarNetModule(MriModule):
 
         target = batch.target
 
-        alpha = 0.84
+        print(output[0, 0, 0, :, 0])
+        print(target[0, 0, 0, :, 0])
 
-        print(F.l1_loss(target, output))
+        alpha = 0.84
 
         loss = (1-alpha) * F.l1_loss(target, output) - alpha * self.loss(
             target.view(target.shape[0], -1, target.shape[2], target.shape[3]), output.view(output.shape[0], -1, output.shape[2], output.shape[3])
