@@ -504,10 +504,10 @@ class VarNetDataTransform:
 
         gt_torch = fastmri.ifft2c(to_tensor(coil_compressed_x).permute(2, 0, 1, 3))
 
-        print(gt_torch.max())
+        print(f"gt max: {gt_torch.max()}")
 
         kspace_torch = fastmri.fft2c(gt_torch)
-        print(kspace_torch.max())
+        print(f"kspace max: {kspace_torch.max()}")
         exit()
 
         seed = None if not self.use_seed else tuple(map(ord, fname))
