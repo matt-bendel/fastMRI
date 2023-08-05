@@ -17,6 +17,7 @@ from .mri_module import MriModule
 import pytorch_ssim
 import pytorch_lightning as pl
 import numpy as np
+import matplotlib.pyplot as plt
 
 class VarNetModule(MriModule):
     """
