@@ -502,7 +502,11 @@ class VarNetDataTransform:
         # TODO: Save SVD matrix offline
         coil_compressed_x = ImageCropandKspaceCompression(x, None)  # (384, 384, 8)
 
+        del kspace
+
         gt_torch = to_tensor(coil_compressed_x).permute(2, 0, 1, 3)
+
+        del coil_compressed_x
 
         kspace_torch = fastmri.fft2c(gt_torch)
 
