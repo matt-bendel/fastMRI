@@ -165,9 +165,9 @@ def build_args():
         replace_sampler_ddp=False,  # this is necessary for volume dispatch during val
         strategy=backend,  # what distributed version to use
         seed=42,  # random seed
-        deterministic=True,  # makes things slower, but deterministic
+        deterministic=False,  # makes things slower, but deterministic
         default_root_dir=default_root_dir,  # directory for logs and checkpoints
-        max_epochs=50,  # max number of epochs
+        max_epochs=20,  # max number of epochs
         num_sanity_val=0
     )
 
