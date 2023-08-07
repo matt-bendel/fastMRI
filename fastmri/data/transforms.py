@@ -510,8 +510,8 @@ class VarNetDataTransform:
             print(sense_path)
             with open(sense_path, 'rb') as inp:
                 maps = pickle.load(inp)
-        except:
-            print("uhoh")
+        except Exception as e:
+            print(e)
 
         S = sp.linop.Multiply((384, 384), maps)
         target = torch.tensor(S.H * coil_compressed_x).abs()
