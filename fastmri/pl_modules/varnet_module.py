@@ -93,7 +93,7 @@ class VarNetModule(MriModule):
             pools=self.pools,
         )
 
-        self.loss = pytorch_ssim.SSIM()
+        self.loss = fastmri.SSIMLoss()
 
     def forward(self, masked_kspace, mask, num_low_frequencies):
         return self.varnet(masked_kspace, mask, num_low_frequencies)
