@@ -506,8 +506,7 @@ class VarNetDataTransform:
 
         maps = None
         try:
-            print(fname)
-            print(sice_num)
+            print(slice_num)
             sense_path = f'/storage/fastMRI_brain/sense_maps/train_full_res/{fname}_{slice_num}.pkl' if self.is_train else f'/storage/fastMRI_brain/sense_maps/val_full_res/{fname}_{slice_num}.pkl'
             with open(sense_path, 'rb') as inp:
                 maps = pickle.load(inp)
