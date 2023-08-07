@@ -514,7 +514,7 @@ class VarNetDataTransform:
             print(e)
 
         S = sp.linop.Multiply((384, 384), maps)
-        target = torch.tensor(S.H * coil_compressed_x).abs()
+        target = torch.tensor(S.H * coil_compressed_x.transpose(2, 0, 1)).abs()
 
         del kspace
 
