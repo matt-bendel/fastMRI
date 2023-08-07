@@ -216,12 +216,17 @@ class CombinedSliceDataset(torch.utils.data.Dataset):
                 i = i - len(dataset)
 
 
-def filter_samps(metadata, nc):
+def filter_samps(metadata, nc, fname):
     if metadata[2]['acquisition'] != "AXT2":
         return False
 
     volume_size = metadata[2]['encoding_size']
-    if volume_size[0] < 384 or volume_size[1] < 384 or nc < 8:
+    if volume_size[0] < 384 or volume_size[1] < 384 or nc <= 8 or str(
+                    fname) == '/storage/fastMRI_brain/data/multicoil_val/file_brain_AXT2_209_2090296.h5' or str(
+                fname) == '/storage/fastMRI_brain/data/multicoil_val/file_brain_AXT2_200_2000250.h5' or str(
+                fname) == '/storage/fastMRI_brain/data/multicoil_val/file_brain_AXT2_201_2010106.h5' or str(
+                fname) == '/storage/fastMRI_brain/data/multicoil_val/file_brain_AXT2_204_2130024.h5' or str(
+                fname) == '/storage/fastMRI_brain/data/multicoil_val/file_brain_AXT2_210_2100025.h5':
         return False
 
     return True
@@ -316,7 +321,7 @@ class SliceDataset(torch.utils.data.Dataset):
                 new_raw_samples = []
                 for slice_ind in range(num_slices):
                     raw_sample = FastMRIRawDataSample(fname, slice_ind, metadata)
-                    if self.raw_sample_filter(raw_sample, num_coils) and slice_ind <= 5:
+                    if self.raw_sample_filter(raw_sample, num_coils, fname) and slice_ind <= 5:
                         new_raw_samples.append(raw_sample)
 
                 # if len(self.raw_samples) < 100:
