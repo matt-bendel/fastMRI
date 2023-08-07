@@ -12,6 +12,7 @@ import torch
 
 import fastmri
 import numpy as np
+import sigpy as sp
 
 fft = lambda x, ax: np.fft.fftshift(np.fft.fftn(np.fft.ifftshift(x, axes=ax), axes=ax, norm='ortho'), axes=ax)
 ifft = lambda X, ax: np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(X, axes=ax), axes=ax, norm='ortho'), axes=ax)
@@ -505,8 +506,8 @@ class VarNetDataTransform:
 
         maps = None
         try:
-            sense_path = '/storage/fastMRI_brain/sense_maps/train_full_res/{fname}_{slice_num}.pkl' if self.is_train else '/storage/fastMRI_brain/sense_maps/val_full_res/{fname}_{slice_num}.pkl'
-            with open(f'/storage/fastMRI_brain/sense_maps/train_full_res/{fname}_{slice_num}.pkl', 'rb') as inp:
+            sense_path = f'/storage/fastMRI_brain/sense_maps/train_full_res/{fname}_{slice_num}.pkl' if self.is_train else f'/storage/fastMRI_brain/sense_maps/val_full_res/{fname}_{slice_num}.pkl'
+            with open(sense_path, 'rb') as inp:
                 maps = pickle.load(inp)
         except:
             exit()
