@@ -116,6 +116,20 @@ class VarNetModule(MriModule):
         )
         target, output = transforms.center_crop_to_smallest(batch.target, output)
 
+        if self.global_rank == 0 and batch_idx == 0:
+            np_gt = target[0].cpu().numpy()
+            np_recon = output[0].cpu().numpy()
+
+            plt.figure()
+            plt.imshow(np_recon, cmap='gray')
+            plt.savefig('recon_rss.png')
+            plt.close()
+
+            plt.figure()
+            plt.imshow(np_gt, cmap='gray')
+            plt.savefig('gt_rss.png')
+            plt.close()
+
         return {
             "batch_idx": batch_idx,
             "fname": batch.fname,
