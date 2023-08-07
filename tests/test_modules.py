@@ -216,7 +216,7 @@ def test_varnet_trainer(fastmri_mock_dataset, backend, tmp_path, monkeypatch):
         params.mask_type, params.center_fractions, params.accelerations
     )
     train_transform = VarNetDataTransform(mask_func=mask, use_seed=False)
-    val_transform = VarNetDataTransform(mask_func=mask)
+    val_transform = VarNetDataTransform(mask_func=mask, is_train=False)
     test_transform = VarNetDataTransform()
     data_module = FastMriDataModule(
         data_path=params.data_path,
