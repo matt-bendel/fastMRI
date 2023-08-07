@@ -510,7 +510,7 @@ class VarNetDataTransform:
             with open(sense_path, 'rb') as inp:
                 maps = pickle.load(inp)
         except:
-            exit()
+            print("uhoh")
 
         S = sp.linop.Multiply((384, 384), maps)
         target = torch.tensor(S.H * coil_compressed_x).abs()
