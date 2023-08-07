@@ -167,7 +167,7 @@ def build_args():
         seed=42,  # random seed
         deterministic=False,  # makes things slower, but deterministic
         default_root_dir=default_root_dir,  # directory for logs and checkpoints
-        max_epochs=15,  # max number of epochs
+        max_epochs=40,  # max number of epochs
         num_sanity_val=0
     )
 
@@ -181,10 +181,10 @@ def build_args():
     args.callbacks = [
         pl.callbacks.ModelCheckpoint(
             dirpath=args.default_root_dir / "checkpoints",
-            save_top_k=1,
+            save_top_k=True,
             verbose=True,
-            monitor="epoch",
-            mode="max",
+            monitor="validation_loss",
+            mode="min",
         )
     ]
 

@@ -451,7 +451,7 @@ class VarNetDataTransform:
     Data Transformer for training VarNet models.
     """
 
-    def __init__(self, mask_func: Optional[MaskFunc] = None, use_seed: bool = True):
+    def __init__(self, mask_func: Optional[MaskFunc] = None, use_seed: bool = True, is_train: bool = True):
         """
         Args:
             mask_func: Optional; A function that can create a mask of
@@ -462,6 +462,7 @@ class VarNetDataTransform:
         """
         self.mask_func = mask_func
         self.use_seed = use_seed
+        self.is_train = is_train
 
     def __call__(
         self,
@@ -502,11 +503,23 @@ class VarNetDataTransform:
         # TODO: Save SVD matrix offline
         coil_compressed_x = ImageCropandKspaceCompression(x, None)  # (384, 384, 8)
 
+        maps = None
+        try:
+            sense_path = '/storage/fastMRI_brain/sense_maps/train_full_res/{fname}_{slice_num}.pkl' if self.is_train else '/storage/fastMRI_brain/sense_maps/val_full_res/{fname}_{slice_num}.pkl'
+            with open(f'/storage/fastMRI_brain/sense_maps/train_full_res/{fname}_{slice_num}.pkl', 'rb') as inp:
+                maps = pickle.load(inp)
+        except:
+            exit()
+
+        S = sp.linop.Multiply((384, 384), maps)
+        target = torch.tensor(S.H * coil_compressed_x).abs()
+
         del kspace
 
         gt_torch = to_tensor(coil_compressed_x).permute(2, 0, 1, 3)
 
         del coil_compressed_x
+        del gt_torch
 
         kspace_torch = fastmri.fft2c(gt_torch)
 
@@ -524,7 +537,7 @@ class VarNetDataTransform:
             masked_kspace=masked_kspace.float(),
             mask=mask_torch.to(torch.bool),
             num_low_frequencies=num_low_frequencies,
-            target=gt_torch.float(),
+            target=target.float(),
             fname=fname,
             slice_num=slice_num,
             max_value=max_value,
