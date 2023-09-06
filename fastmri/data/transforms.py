@@ -127,6 +127,7 @@ def apply_mask(
     # Random masks...
     x = [2, 8]
     y = [32, 16]
+    resolution = 384
     r = np.random.randint(2, 9)
     cw = int(np.rint(np.interp(r, x, y)))
     if cw % 2 != 0:
