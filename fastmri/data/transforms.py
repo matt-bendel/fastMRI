@@ -137,7 +137,14 @@ def apply_mask(
     e = s + cw
     m[:, s:e] = True
     a = np.random.choice(resolution - cw, resolution // r - cw, replace=False)
-    a = np.where(a < s, a, a + args.calib_width)
+    a = np.where(a < s, a, a + cw)
+
+    m[:, a] = True
+
+    samp = m
+    mask = to_tensor(np.tile(samp, (8, 1, 1)).astype(np.float32))
+    mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
+
     num_low_frequencies = cw
 
     masked_data = data * mask + 0.0  # the + 0.0 removes the sign of the zeros
