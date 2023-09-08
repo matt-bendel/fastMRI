@@ -20,6 +20,7 @@ ifft = lambda X, ax: np.fft.fftshift(np.fft.ifftn(np.fft.ifftshift(X, axes=ax), 
 
 from .subsample import MaskFunc
 
+
 def ImageCropandKspaceCompression(x, vh):
     w_from = (x.shape[0] - 384) // 2  # crop images into 384x384
     h_from = (x.shape[1] - 384) // 2
@@ -40,6 +41,7 @@ def ImageCropandKspaceCompression(x, vh):
         coil_compressed_x = cropped_x
 
     return coil_compressed_x
+
 
 def to_tensor(data: np.ndarray) -> torch.Tensor:
     """
@@ -74,11 +76,11 @@ def tensor_to_complex_np(data: torch.Tensor) -> np.ndarray:
 
 
 def apply_mask(
-    data: torch.Tensor,
-    mask_func: MaskFunc,
-    offset: Optional[int] = None,
-    seed: Optional[Union[int, Tuple[int, ...]]] = None,
-    padding: Optional[Sequence[int]] = None,
+        data: torch.Tensor,
+        mask_func: MaskFunc,
+        offset: Optional[int] = None,
+        seed: Optional[Union[int, Tuple[int, ...]]] = None,
+        padding: Optional[Sequence[int]] = None,
 ) -> Tuple[torch.Tensor, torch.Tensor, int]:
     """
     Subsample given k-space by multiplying with a mask.
@@ -109,43 +111,43 @@ def apply_mask(
     #      196, 197, 198, 199, 200, 204, 210, 217, 224, 231, 239, 248, 258, 269, 281, 294, 309, 326, 344, 363])
 
     # R=4 GRO
-    # a = np.array([0, 10, 19, 28, 37, 46, 54, 61, 69, 76, 83, 89, 95, 101, 107, 112, 118, 122, 127, 132, 136, 140, 144,
-    #      148,
-    #      151, 155, 158, 161, 164,
-    #      167, 170, 173, 176, 178, 181, 183, 186, 188, 191, 193, 196, 198, 201, 203, 206, 208, 211, 214, 217,
-    #      220,
-    #      223, 226, 229, 233, 236,
-    #      240, 244, 248, 252, 257, 262, 266, 272, 277, 283, 289, 295, 301, 308, 315, 323, 330, 338, 347, 356,
-    #      365,
-    #      374])
-    # m[:, a] = True
-    # samp = m
-    # mask = to_tensor(np.tile(samp, (8, 1, 1)).astype(np.float32))
-    # mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
-    # num_low_frequencies = 16
-
-    # Random masks...
-    x = [2, 8]
-    y = [32, 16]
-    resolution = 384
-    r = np.random.randint(2, 9)
-    cw = int(np.rint(np.interp(r, x, y)))
-    if cw % 2 != 0:
-        cw = cw + 1
-    midway = resolution // 2
-    s = midway - cw // 2
-    e = s + cw
-    m[:, s:e] = True
-    a = np.random.choice(resolution - cw, resolution // r - cw, replace=False)
-    a = np.where(a < s, a, a + cw)
-
+    a = np.array([0, 10, 19, 28, 37, 46, 54, 61, 69, 76, 83, 89, 95, 101, 107, 112, 118, 122, 127, 132, 136, 140, 144,
+                  148,
+                  151, 155, 158, 161, 164,
+                  167, 170, 173, 176, 178, 181, 183, 186, 188, 191, 193, 196, 198, 201, 203, 206, 208, 211, 214, 217,
+                  220,
+                  223, 226, 229, 233, 236,
+                  240, 244, 248, 252, 257, 262, 266, 272, 277, 283, 289, 295, 301, 308, 315, 323, 330, 338, 347, 356,
+                  365,
+                  374])
     m[:, a] = True
-
     samp = m
     mask = to_tensor(np.tile(samp, (8, 1, 1)).astype(np.float32))
     mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
+    num_low_frequencies = 16
 
-    num_low_frequencies = cw
+    # Random masks...
+    # x = [2, 8]
+    # y = [32, 16]
+    # resolution = 384
+    # r = np.random.randint(2, 9)
+    # cw = int(np.rint(np.interp(r, x, y)))
+    # if cw % 2 != 0:
+    #     cw = cw + 1
+    # midway = resolution // 2
+    # s = midway - cw // 2
+    # e = s + cw
+    # m[:, s:e] = True
+    # a = np.random.choice(resolution - cw, resolution // r - cw, replace=False)
+    # a = np.where(a < s, a, a + cw)
+    #
+    # m[:, a] = True
+    #
+    # samp = m
+    # mask = to_tensor(np.tile(samp, (8, 1, 1)).astype(np.float32))
+    # mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
+    #
+    # num_low_frequencies = cw
 
     masked_data = data * mask + 0.0  # the + 0.0 removes the sign of the zeros
 
@@ -170,7 +172,7 @@ def mask_center(x: torch.Tensor, mask_from: int, mask_to: int) -> torch.Tensor:
 
 
 def batched_mask_center(
-    x: torch.Tensor, mask_from: torch.Tensor, mask_to: torch.Tensor
+        x: torch.Tensor, mask_from: torch.Tensor, mask_to: torch.Tensor
 ) -> torch.Tensor:
     """
     Initializes a mask with the center filled in.
@@ -190,7 +192,7 @@ def batched_mask_center(
         raise ValueError("mask_from and mask_to must have 1 dimension.")
     if not mask_from.shape[0] == 1:
         if (not x.shape[0] == mask_from.shape[0]) or (
-            not x.shape[0] == mask_to.shape[0]
+                not x.shape[0] == mask_to.shape[0]
         ):
             raise ValueError("mask_from and mask_to must have batch_size length.")
 
@@ -255,7 +257,7 @@ def complex_center_crop(data: torch.Tensor, shape: Tuple[int, int]) -> torch.Ten
 
 
 def center_crop_to_smallest(
-    x: torch.Tensor, y: torch.Tensor
+        x: torch.Tensor, y: torch.Tensor
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """
     Apply a center crop on the larger image to the size of the smaller.
@@ -280,10 +282,10 @@ def center_crop_to_smallest(
 
 
 def normalize(
-    data: torch.Tensor,
-    mean: Union[float, torch.Tensor],
-    stddev: Union[float, torch.Tensor],
-    eps: Union[float, torch.Tensor] = 0.0,
+        data: torch.Tensor,
+        mean: Union[float, torch.Tensor],
+        stddev: Union[float, torch.Tensor],
+        eps: Union[float, torch.Tensor] = 0.0,
 ) -> torch.Tensor:
     """
     Normalize the given tensor.
@@ -303,7 +305,7 @@ def normalize(
 
 
 def normalize_instance(
-    data: torch.Tensor, eps: Union[float, torch.Tensor] = 0.0
+        data: torch.Tensor, eps: Union[float, torch.Tensor] = 0.0
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     """
     Normalize the given tensor  with instance norm/
@@ -353,10 +355,10 @@ class UnetDataTransform:
     """
 
     def __init__(
-        self,
-        which_challenge: str,
-        mask_func: Optional[MaskFunc] = None,
-        use_seed: bool = True,
+            self,
+            which_challenge: str,
+            mask_func: Optional[MaskFunc] = None,
+            use_seed: bool = True,
     ):
         """
         Args:
@@ -375,13 +377,13 @@ class UnetDataTransform:
         self.use_seed = use_seed
 
     def __call__(
-        self,
-        kspace: np.ndarray,
-        mask: np.ndarray,
-        target: np.ndarray,
-        attrs: Dict,
-        fname: str,
-        slice_num: int,
+            self,
+            kspace: np.ndarray,
+            mask: np.ndarray,
+            target: np.ndarray,
+            attrs: Dict,
+            fname: str,
+            slice_num: int,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, str, int, float]:
         """
         Args:
@@ -502,13 +504,13 @@ class VarNetDataTransform:
         self.is_train = is_train
 
     def __call__(
-        self,
-        kspace: np.ndarray,
-        mask: np.ndarray,
-        target: Optional[np.ndarray],
-        attrs: Dict,
-        fname: str,
-        slice_num: int,
+            self,
+            kspace: np.ndarray,
+            mask: np.ndarray,
+            target: Optional[np.ndarray],
+            attrs: Dict,
+            fname: str,
+            slice_num: int,
     ) -> VarNetSample:
         """
         Args:
@@ -617,11 +619,11 @@ class MiniCoilTransform:
     """
 
     def __init__(
-        self,
-        mask_func: Optional[MaskFunc] = None,
-        use_seed: Optional[bool] = True,
-        crop_size: Optional[tuple] = None,
-        num_compressed_coils: Optional[int] = None,
+            self,
+            mask_func: Optional[MaskFunc] = None,
+            use_seed: Optional[bool] = True,
+            crop_size: Optional[tuple] = None,
+            num_compressed_coils: Optional[int] = None,
     ):
         """
         Args:
