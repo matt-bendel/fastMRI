@@ -121,10 +121,11 @@ def apply_mask(
                   365,
                   374])
     m[:, a] = True
+    m[:, 176:208] = True
     samp = m
     mask = to_tensor(np.tile(samp, (8, 1, 1)).astype(np.float32))
     mask = torch.unsqueeze(mask, -1).repeat(1, 1, 1, 2)
-    num_low_frequencies = 16
+    num_low_frequencies = 32
 
     # Random masks...
     # x = [2, 8]
